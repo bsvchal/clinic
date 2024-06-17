@@ -20,7 +20,10 @@ public class AppointmentEntityTypeConfiguration
             .WithMany(d => d.Appointments);
 
         builder
-            .Property(a => a.Price)
-            .HasPrecision(10, 3);
+            .Property(a => a.Price).HasPrecision(10, 3);
+        builder
+            .Property(a => a.Patient).IsRequired();
+        builder
+            .Property(a => a.Doctor).IsRequired();
     }
 }

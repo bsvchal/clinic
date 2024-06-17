@@ -12,5 +12,9 @@ public class AccountEntityTypeConfiguration
         builder.HasKey(a => a.Id);
 
         builder.HasOne(a => a.Photo);
+
+        builder.Property(a => a.Email).IsRequired();
+        builder.Property(a => a.Password).IsRequired();
+        builder.Property(a => a.PhoneNumber).IsRequired();
     }
 }

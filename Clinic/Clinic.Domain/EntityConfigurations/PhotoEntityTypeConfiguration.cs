@@ -10,5 +10,8 @@ public class PhotoEntityTypeConfiguration
     public void Configure(EntityTypeBuilder<Photo> builder)
     {
         builder.HasKey(p => p.Id);
+
+        builder
+            .Property(p => p.Path).IsRequired();
     }
 }

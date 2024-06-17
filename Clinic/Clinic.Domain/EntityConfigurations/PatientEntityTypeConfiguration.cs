@@ -17,5 +17,16 @@ public class PatientEntityTypeConfiguration
             .HasMany(p => p.Appointments)
             .WithOne(a => a.Patient)
             .HasForeignKey(a => a.PatientId);
+
+        builder
+            .Property(p => p.FirstName).IsRequired();
+        builder
+            .Property(p => p.LastName).IsRequired();
+        builder
+            .Property(p => p.MiddleName).IsRequired();
+        builder
+            .Property(p =>  p.Account).IsRequired();
+        builder
+            .Property(p => p.Appointments).IsRequired();
     }
 }

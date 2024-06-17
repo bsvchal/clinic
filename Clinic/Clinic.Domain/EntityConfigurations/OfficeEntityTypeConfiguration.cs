@@ -18,5 +18,14 @@ public class OfficeEntityTypeConfiguration
         builder
             .HasMany(o => o.Receptionists)
             .WithOne(r => r.Office);
+
+        builder
+            .Property(o => o.City).IsRequired();
+        builder
+            .Property(o => o.RegistryPhoneNumber).IsRequired();
+        builder
+            .Property(o => o.Doctors).IsRequired();
+        builder
+            .Property(o => o.Receptionists).IsRequired();
     }
 }

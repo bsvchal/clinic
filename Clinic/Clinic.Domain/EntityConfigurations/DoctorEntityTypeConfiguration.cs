@@ -22,5 +22,20 @@ public class DoctorEntityTypeConfiguration
             .HasMany(d => d.Appointments)
             .WithOne(a => a.Doctor)
             .HasForeignKey(a => a.DoctorId);
+
+        builder
+            .Property(d => d.FirstName).IsRequired();
+        builder
+            .Property(d => d.LastName).IsRequired();
+        builder
+            .Property(d => d.MiddleName).IsRequired();
+        builder
+            .Property(d => d.Specialization).IsRequired();
+        builder
+            .Property(d => d.Office).IsRequired();
+        builder
+            .Property(d => d.Account).IsRequired();
+        builder
+            .Property(d => d.Appointments).IsRequired();
     }
 }

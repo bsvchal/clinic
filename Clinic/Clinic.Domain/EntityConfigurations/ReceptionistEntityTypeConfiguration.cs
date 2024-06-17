@@ -17,5 +17,16 @@ public class ReceptionistEntityTypeConfiguration
             .HasOne(r => r.Office)
             .WithMany(o => o.Receptionists)
             .HasForeignKey(r => r.OfficeId);
+
+        builder
+            .Property(r => r.FirstName).IsRequired();
+        builder
+            .Property(r => r.LastName).IsRequired();
+        builder
+            .Property(r => r.MiddleName).IsRequired();
+        builder
+            .Property(r => r.Account).IsRequired();
+        builder
+            .Property(r => r.Office).IsRequired();
     }
 }

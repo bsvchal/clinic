@@ -1,4 +1,5 @@
 ﻿using Clinic.Domain.Entities;
+using Clinic.Domain.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
 namespace Clinic.Domain;
@@ -16,5 +17,10 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions options)
         : base(options)
     {
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
     }
 }

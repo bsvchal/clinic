@@ -8,6 +8,7 @@ public class Account
     public string PhoneNumber { get; set; } 
     public bool IsEmailVerified { get; set; }
     public DateTime CreatedAt { get; set; }
+    public bool IsDeleted { get; set; }
     public Guid? PhotoId { get; set; }
     public Photo? Photo { get; set; }
 }

@@ -9,6 +9,7 @@ public class Appointment
     public bool IsApproved { get; set; }
     [Precision(10, 3)]
     public decimal Price { get; set; }
+    public bool IsDeleted { get; set; }
     public Guid PatientId { get; set; }
     public Patient Patient { get; set; } 
     public Guid DoctorId { get; set; }

@@ -10,6 +10,7 @@ public class Doctor
     public int CareerStartYear { get; set; }
     public bool IsWorking { get; set; }
     public string Specialization { get; set; } 
+    public bool IsDeleted { get; set; }
     public Guid OfficeId { get; set; }
     public Office Office { get; set; } 
     public Guid AccountId { get; set; }

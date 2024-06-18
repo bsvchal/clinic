@@ -1,8 +1,7 @@
 ﻿namespace Clinic.Domain.Entities;
 
-public class Doctor
+public class Doctor : BaseEntity
 {
-    public Guid Id { get; set; }
     public string FirstName { get; set; } 
     public string LastName { get; set; } 
     public string MiddleName { get; set; }
@@ -10,7 +9,6 @@ public class Doctor
     public int CareerStartYear { get; set; }
     public bool IsWorking { get; set; }
     public string Specialization { get; set; } 
-    public bool IsDeleted { get; set; }
     public Guid OfficeId { get; set; }
     public Office Office { get; set; } 
     public Guid AccountId { get; set; }

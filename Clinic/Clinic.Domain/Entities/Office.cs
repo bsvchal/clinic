@@ -3,9 +3,8 @@
 public class Office
 {
     public Guid Id { get; set; }
-    public string City { get; set; } 
+    public string CityName { get; set; } 
     public string RegistryPhoneNumber { get; set; } 
-
-    public IEnumerable<Doctor> Doctors { get; set; }
-    public IEnumerable<Receptionist> Receptionists { get; set; }
+    public ICollection<Doctor> Doctors { get; set; }
+    public ICollection<Receptionist> Receptionists { get; set; }
 }

@@ -1,6 +1,6 @@
-﻿namespace Clinic.Domain.DTO.Account;
+﻿namespace Clinic.API.DTO.Account;
 
-public class AccountForCreationDTO
+public class AccountForCreation
 {
     public string Email { get; set; }
     public string Password { get; set; }

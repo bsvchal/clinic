@@ -1,6 +1,6 @@
-﻿namespace Clinic.Domain.DTO.Appointment;
+﻿namespace Clinic.API.DTO.Appointment;
 
-public class AppointmentForCreationDTO
+public class AppointmentForCreation
 {
     public DateTime ScheduledFor { get; set; }
     public decimal Price { get; set; }

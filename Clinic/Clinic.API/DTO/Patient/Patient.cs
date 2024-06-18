@@ -1,12 +1,11 @@
-﻿using Clinic.Domain.DTO.Account;
+﻿using Clinic.API.DTO.Appointment;
 
-namespace Clinic.Domain.DTO.Patient;
+namespace Clinic.API.DTO.Patient;
 
-public class PatientForCreationDTO
+public class Patient
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string MiddleName { get; set; }
     public DateOnly DateOfBirth { get; set; }
-    public AccountForCreationDTO AccountForCreation { get; set; }
 }

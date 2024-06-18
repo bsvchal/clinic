@@ -1,14 +1,15 @@
-﻿using Clinic.Domain.DTO.Appointment;
+﻿using Clinic.API.DTO.Account;
 
-namespace Clinic.Domain.DTO.Doctor;
+namespace Clinic.API.DTO.Doctor;
 
-public class DoctorDTO
+public class DoctorForCreation
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string MiddleName { get; set; }
     public DateOnly DateOfBirth { get; set; }
     public int CareerStartYear { get; set; }
-    public bool IsWorking { get; set; }
     public string Specialization { get; set; }
+    public Guid OfficeId { get; set; }
+    public AccountForCreation AccountForCreation { get; set; }
 }

@@ -1,6 +1,6 @@
-﻿namespace Clinic.Domain.DTO.Photo;
+﻿namespace Clinic.API.DTO.Photo;
 
-public class PhotoForCreationDTO
+public class PhotoForCreation
 {
     public string Path { get; set; }
     public Guid AccountId { get; set; }

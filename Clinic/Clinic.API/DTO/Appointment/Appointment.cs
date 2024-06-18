@@ -1,6 +1,6 @@
-﻿namespace Clinic.Domain.DTO.Appointment;
+﻿namespace Clinic.API.DTO.Appointment;
 
-public class AppointmentDTO
+public class Appointment
 {
     public DateTime ScheduledFor { get; set; }
     public bool IsApproved { get; set; }

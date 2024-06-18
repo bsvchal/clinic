@@ -1,6 +1,6 @@
-﻿using Clinic.API.DTO.Doctor;
+﻿using Clinic.API.Models.Doctor;
 
-namespace Clinic.API.DTO.Office;
+namespace Clinic.API.Models.Office;
 
 public class Office
 {

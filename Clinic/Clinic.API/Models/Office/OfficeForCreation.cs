@@ -1,4 +1,4 @@
-﻿namespace Clinic.API.DTO.Office;
+﻿namespace Clinic.API.Models.Office;
 
 public class OfficeForCreation
 {

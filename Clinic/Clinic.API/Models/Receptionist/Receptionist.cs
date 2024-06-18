@@ -1,4 +1,4 @@
-﻿namespace Clinic.API.DTO.Receptionist;
+﻿namespace Clinic.API.Models.Receptionist;
 
 public class Receptionist
 {

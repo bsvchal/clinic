@@ -1,4 +1,4 @@
-﻿namespace Clinic.API.DTO.Appointment;
+﻿namespace Clinic.API.Models.Appointment;
 
 public class AppointmentForCreation
 {

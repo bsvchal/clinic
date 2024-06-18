@@ -1,4 +1,4 @@
-﻿namespace Clinic.API.DTO.Account;
+﻿namespace Clinic.API.Models.Account;
 
 public class AccountForCreation
 {

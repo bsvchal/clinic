@@ -1,15 +1,14 @@
-﻿using Clinic.API.DTO.Account;
+﻿using Clinic.API.Models.Appointment;
 
-namespace Clinic.API.DTO.Doctor;
+namespace Clinic.API.Models.Doctor;
 
-public class DoctorForCreation
+public class Doctor
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string MiddleName { get; set; }
     public DateOnly DateOfBirth { get; set; }
     public int CareerStartYear { get; set; }
+    public bool IsWorking { get; set; }
     public string Specialization { get; set; }
-    public Guid OfficeId { get; set; }
-    public AccountForCreation AccountForCreation { get; set; }
 }

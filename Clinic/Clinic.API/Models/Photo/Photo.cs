@@ -1,4 +1,4 @@
-﻿namespace Clinic.API.DTO.Photo;
+﻿namespace Clinic.API.Models.Photo;
 
 public class Photo
 {

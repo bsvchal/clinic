@@ -1,8 +1,7 @@
 ﻿namespace Clinic.Domain.Entities;
 
-public class Patient
+public class Patient : BaseEntity
 {
-    public Guid Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; } 
     public string MiddleName { get; set; } 

@@ -2,9 +2,8 @@
 
 namespace Clinic.Domain.Entities;
 
-public class Appointment
+public class Appointment : BaseEntity
 {
-    public Guid Id { get; set; }
     public DateTime ScheduledTime { get; set; }
     public bool IsApproved { get; set; }
     [Precision(10, 3)]

@@ -17,4 +17,19 @@ public class AppDbContext : DbContext
         : base(options)
     {
     }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        foreach (var entry in ChangeTracker.Entries())
+        {
+            if (entry.State is not EntityState.Deleted ||
+                entry.Entity is not BaseEntity)
+                continue;
+
+            entry.State = EntityState.Modified;
+            (entry.Entity as BaseEntity)!.IsDeleted = true;
+        }
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
 }

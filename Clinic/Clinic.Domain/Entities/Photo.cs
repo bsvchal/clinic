@@ -1,7 +1,9 @@
-﻿namespace Clinic.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Clinic.Domain.Entities;
 
 public class Photo : BaseEntity
 {
-    public string Path { get; set; } 
+    public string Path { get; set; }
     public Guid AccountId { get; set; }
 }

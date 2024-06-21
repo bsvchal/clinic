@@ -6,10 +6,10 @@ namespace Clinic.Domain.Interfaces;
 public interface IClinicRepository
 {
     IQueryable<Appointment> GetAppointments(
-        Expression<Predicate<Appointment>>? predicate);
+        Expression<Func<Appointment, bool>>? predicate);
 
     IQueryable<Office> GetOffices(
-        Expression<Predicate<Office>>? predicate);
+        Expression<Func<Office, bool>>? predicate);
 
     Task<Guid?> CreateAppointmentAsync(
         Appointment appointment,

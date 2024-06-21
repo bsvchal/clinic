@@ -6,15 +6,15 @@ namespace Clinic.Domain.Interfaces;
 public interface IAccountsRepository
 {
     IQueryable<Patient> GetPatients(
-        Expression<Predicate<Patient>>? predicate
+        Expression<Func<Patient, bool>>? predicate
     );
 
     IQueryable<Doctor> GetDoctors(
-        Expression<Predicate<Doctor>>? predicate
+        Expression<Func<Doctor, bool>>? predicate
     );
 
     IQueryable<Receptionist> GetReceptionists(
-        Expression<Predicate<Receptionist>>? predicate
+        Expression<Func<Receptionist, bool>>? predicate
     );
 
     Task<Guid?> CreatePatientAsync(

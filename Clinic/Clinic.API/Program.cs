@@ -1,4 +1,5 @@
 using Clinic.Domain;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
 namespace Clinic.API;
@@ -21,6 +22,9 @@ public class Program
             }
         );
 
+        builder.Services.AddMediatR(
+            cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
         var app = builder.Build();
         if (app.Environment.IsDevelopment())
         {
@@ -33,7 +37,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
-
+            
         app.Run();
     }
 }

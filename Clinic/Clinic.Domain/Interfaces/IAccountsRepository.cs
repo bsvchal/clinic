@@ -39,7 +39,7 @@ public interface IAccountsRepository
 
     Task UpdateDoctorAsync(
         Doctor doctor,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken = default            
     );
 
     Task UpdateReceptionistAsync(
@@ -48,17 +48,17 @@ public interface IAccountsRepository
     );
 
     Task DeletePatientAsync(
-        Guid id,
+        Patient patient,
         CancellationToken cancellationToken = default
     );
 
     Task DeleteDoctorAsync(
-        Guid id,
+        Doctor doctor,
         CancellationToken cancellationToken = default
     );
 
     Task DeleteReceptionistAsync(
-        Guid id,
+        Receptionist receptionist, 
         CancellationToken cancellationToken = default
     );
 

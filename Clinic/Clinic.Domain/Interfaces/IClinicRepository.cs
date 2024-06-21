@@ -32,12 +32,12 @@ public interface IClinicRepository
     );
 
     Task DeleteAppointmentAsync(
-        Guid id,
+        Appointment appointment,
         CancellationToken cancellationToken = default
     );
 
     Task DeleteOfficeAsync(
-        Guid id,
+        Office office,
         CancellationToken cancellationToken = default
     );
 

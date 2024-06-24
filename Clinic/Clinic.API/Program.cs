@@ -1,4 +1,5 @@
 using Clinic.Domain;
+using Clinic.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Clinic.API;
@@ -12,7 +13,6 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
         builder.Services.AddDbContext<AppDbContext>(
             options =>
             {
@@ -20,6 +20,7 @@ public class Program
                     builder.Configuration.GetConnectionString("Local"));
             }
         );
+        builder.Services.AddScoped<IBaseUnitOfWork, AppUnitOfWork>();
 
         var app = builder.Build();
         if (app.Environment.IsDevelopment())
@@ -29,9 +30,7 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
         app.MapControllers();
 
         app.Run();

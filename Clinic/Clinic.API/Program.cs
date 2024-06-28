@@ -19,11 +19,13 @@ public class Program
             options.UseSqlServer(builder.Configuration.GetConnectionString("Local"));
         });
         builder.Services.AddScoped<IUnitOfWork, AppUnitOfWork>();
-        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-        builder.Services.AddProblemDetails();
-
-        builder.Services.AddScoped<IOfficesRepository, OfficesRepository>();
-        builder.Services.AddScoped<IPhotosRepository, PhotosRepository>();
+        builder.Services
+            .AddScoped<IAppointmentsRepository, AppointmentsRepository>()
+            .AddScoped<IDoctorsRepository, DoctorsRepository>()
+            .AddScoped<IOfficesRepository, OfficesRepository>()
+            .AddScoped<IPatientsRepository, PatientsRepository>()
+            .AddScoped<IPhotosRepository, PhotosRepository>()
+            .AddScoped<IReceptionistsRepository, ReceptionistsRepository>();
 
         var app = builder.Build();
         if (app.Environment.IsDevelopment())
@@ -32,18 +34,9 @@ public class Program
             app.UseSwaggerUI();
         }
 
-        app.UseExceptionHandler();
         app.UseHttpsRedirection();
         app.UseAuthorization();
         app.MapControllers();
-
-        app.Map(
-            "/aboba",
-            () =>
-            {
-                throw new NotImplementedException("zaza");
-            }
-        );
 
         app.Run();
     }

@@ -33,7 +33,8 @@ public class AppDbContext : DbContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        foreach (var entry in ChangeTracker.Entries())
+        var entries = ChangeTracker.Entries().ToList();
+        foreach (var entry in entries)
         {
             if (entry.State is not EntityState.Deleted ||
                 entry.Entity is not BaseEntity)

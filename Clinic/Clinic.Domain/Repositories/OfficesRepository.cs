@@ -4,38 +4,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Clinic.Domain.Repositories;
 
-public class OfficesRepository : IBaseRepository
+public class OfficesRepository : BaseRepository<Office>, IOfficesRepository
 {
     private readonly AppDbContext _appDbContext;
 
     public OfficesRepository(AppDbContext appDbContext)
+        : base(appDbContext)
     {
         _appDbContext = appDbContext;
     }
 
-    public async Task<Guid?> CreateAsync(BaseEntity entity, CancellationToken cancellationToken = default)
+    public override async Task<List<Office>> GetAsync(
+        CancellationToken cancellationToken = default)
     {
-        var addedEntityEntry = await _appDbContext.Offices
-            .AddAsync((Office)entity, cancellationToken);
-        return addedEntityEntry?.Entity.Id;
-    }
-
-    public Task DeleteAsync(BaseEntity entity, CancellationToken cancellationToken = default)
-    {
-        return Task.Run(
-            () => _appDbContext.Offices.Remove((Office)entity), cancellationToken);
-    }
-
-    public IQueryable<BaseEntity> Get()
-    {
-        return _appDbContext.Offices
+        return await _appDbContext.Offices
+            .Where(o => !o.IsDeleted)
             .Include(o => o.Doctors)
-            .Include(o => o.Receptionists);
+            .Include(o => o.Receptionists)
+            .ToListAsync(cancellationToken);
     }
 
-    public Task UpdateAsync(BaseEntity entity, CancellationToken cancellationToken = default)
+    public override async Task<Office?> GetByIdAsync(
+        Guid id, CancellationToken cancellationToken = default)
     {
-        return Task.Run(
-            () => _appDbContext.Offices.Update((Office)entity), cancellationToken);
+        return await _appDbContext.Offices
+            .Where(o => !o.IsDeleted)
+            .Where(o => o.Id == id)
+            .Include(o => o.Doctors)
+            .Include(o => o.Receptionists)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

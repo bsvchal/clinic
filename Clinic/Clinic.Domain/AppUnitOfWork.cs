@@ -1,40 +1,110 @@
 ﻿using Clinic.Domain.Interfaces;
-using Clinic.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Clinic.Domain;
 
-public class AppUnitOfWork : IBaseUnitOfWork
+public class AppUnitOfWork : IUnitOfWork
 {
     private readonly AppDbContext _appDbContext;
+    private readonly IServiceProvider _serviceProvider;
 
-    private readonly Lazy<AppointmentsRepository> _appointmentsRepository;
-    private readonly Lazy<DoctorsRepository> _doctorsRepository;
-    private readonly Lazy<OfficesRepository> _officesRepository;
-    private readonly Lazy<PatientsRepository> _patientsRepository;
-    private readonly Lazy<PhotosRepository> _photosRepository;
-    private readonly Lazy<ReceptionistsRepository> _receptionistsRepository;
+    private IAppointmentsRepository? _appointmentsRepository;
+    private IDoctorsRepository? _doctorsRepository;
+    private IOfficesRepository? _officesRepository;
+    private IPatientsRepository? _patientsRepository;
+    private IPhotosRepository? _photosRepository;
+    private IReceptionistsRepository? _receptionistsRepository;
 
-    public AppUnitOfWork(AppDbContext appDbContext)
+    public AppUnitOfWork(AppDbContext appDbContext, IServiceProvider serviceProvider)
     {
         _appDbContext = appDbContext;
-
-        _appointmentsRepository = new(() => new(_appDbContext));
-        _doctorsRepository = new(() => new(_appDbContext));
-        _officesRepository = new(() => new(_appDbContext));
-        _patientsRepository = new(() => new(_appDbContext));
-        _photosRepository = new(() => new(_appDbContext));
-        _receptionistsRepository = new(() => new(_appDbContext));
+        _serviceProvider = serviceProvider;
     }
 
-    public AppointmentsRepository AppointmentsRepository => _appointmentsRepository.Value;
-    public DoctorsRepository DoctorsRepository => _doctorsRepository.Value;
-    public OfficesRepository OfficesRepository => _officesRepository.Value;
-    public PatientsRepository PatientsRepository => _patientsRepository.Value;
-    public PhotosRepository PhotosRepository => _photosRepository.Value;
-    public ReceptionistsRepository ReceptionistsRepository => _receptionistsRepository.Value;
-
-    public async Task<int> SaveChangesAsync()
+    public IAppointmentsRepository AppointmentsRepository 
     {
-        return await _appDbContext.SaveChangesAsync();
+        get
+        {
+            if (_appointmentsRepository is null)
+                _appointmentsRepository = _serviceProvider.GetRequiredService<IAppointmentsRepository>();
+            return _appointmentsRepository;
+        }
+    }
+
+    public IDoctorsRepository DoctorsRepository
+    {
+        get
+        {
+            if (_doctorsRepository is null)
+                _doctorsRepository = _serviceProvider.GetRequiredService<IDoctorsRepository>();
+            return _doctorsRepository;
+        }
+    }
+
+    public IOfficesRepository OfficesRepository
+    {
+        get
+        {
+            if (_officesRepository is null)
+                _officesRepository = _serviceProvider.GetRequiredService<IOfficesRepository>();
+            return _officesRepository;
+        }
+    }
+
+    public IPatientsRepository PatientsRepository
+    {
+        get
+        {
+            if (_patientsRepository is null)
+                _patientsRepository = _serviceProvider.GetRequiredService<IPatientsRepository>();
+            return _patientsRepository;
+        }
+    }
+
+    public IPhotosRepository PhotosRepository
+    {
+        get
+        {
+            if (_photosRepository is null)
+                _photosRepository = _serviceProvider.GetRequiredService<IPhotosRepository>();
+            return _photosRepository;
+        }
+    }
+
+    public IReceptionistsRepository ReceptionistsRepository
+    {
+        get
+        {
+            if (_receptionistsRepository is null)
+                _receptionistsRepository = _serviceProvider.GetRequiredService<IReceptionistsRepository>();
+            return _receptionistsRepository;
+        }
+    }
+
+    public async Task<int> CommitAsync(CancellationToken cancellationToken = default) 
+        => await _appDbContext.SaveChangesAsync(cancellationToken);
+
+    public void Rollback()
+    {
+        var entries = _appDbContext.ChangeTracker.Entries().ToList();
+        foreach (var entry in entries) 
+        {
+            switch (entry.State) 
+            {
+                case EntityState.Added:
+                    entry.State = EntityState.Detached;
+                    break;
+                case EntityState.Deleted:
+                    entry.State = EntityState.Modified;
+                    entry.State = EntityState.Unchanged;
+                    break;
+                case EntityState.Modified:
+                    entry.State = EntityState.Unchanged;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

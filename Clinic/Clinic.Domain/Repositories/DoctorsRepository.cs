@@ -4,39 +4,37 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Clinic.Domain.Repositories;
 
-public class DoctorsRepository : IBaseRepository
+public class DoctorsRepository : BaseRepository<Doctor>, IDoctorsRepository
 {
     private readonly AppDbContext _appDbContext;
 
     public DoctorsRepository(AppDbContext appDbContext)
+        : base(appDbContext)
     {
         _appDbContext = appDbContext;
     }
 
-    public async Task<Guid?> CreateAsync(BaseEntity entity, CancellationToken cancellationToken = default)
+    public override async Task<List<Doctor>> GetAsync(
+        CancellationToken cancellationToken = default)
     {
-        var addedEntityEntry = await _appDbContext.Doctors
-            .AddAsync((Doctor)entity, cancellationToken);
-        return addedEntityEntry?.Entity.Id;
-    }
-
-    public Task DeleteAsync(BaseEntity entity, CancellationToken cancellationToken = default)
-    {
-        return Task.Run(
-            () => _appDbContext.Doctors.Remove((Doctor)entity), cancellationToken);
-    }
-
-    public IQueryable<BaseEntity> Get()
-    {
-        return _appDbContext.Doctors
-            .Include(d => d.Office)
+        return await _appDbContext.Doctors
+            .Where(d => !d.IsDeleted)
             .Include(d => d.Account)
-            .Include(d => d.Appointments);
+            .Include(d => d.Office)
+            .Include(d => d.Appointments)
+            .ToListAsync(cancellationToken);
     }
 
-    public Task UpdateAsync(BaseEntity entity, CancellationToken cancellationToken = default)
+    public override async Task<Doctor?> GetByIdAsync(
+        Guid id, CancellationToken cancellationToken = default)
     {
-        return Task.Run(
-            () => _appDbContext.Doctors.Update((Doctor)entity), cancellationToken);
+        return await _appDbContext.Doctors
+            .Where(d => !d.IsDeleted)
+            .Where(d => d.Id == id)
+            .Include(d => d.Account)
+            .Include(d => d.Office)
+            .Include(d => d.Appointments)
+            .FirstOrDefaultAsync(cancellationToken);
+
     }
 }

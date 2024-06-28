@@ -4,38 +4,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Clinic.Domain.Repositories;
 
-public class PatientsRepository : IBaseRepository
+public class PatientsRepository : BaseRepository<Patient>, IPatientsRepository
 {
     private readonly AppDbContext _appDbContext;
 
     public PatientsRepository(AppDbContext appDbContext)
+        : base(appDbContext)
     {
         _appDbContext = appDbContext;
     }
 
-    public async Task<Guid?> CreateAsync(BaseEntity entity, CancellationToken cancellationToken = default)
+    public override async Task<List<Patient>> GetAsync(
+        CancellationToken cancellationToken = default)
     {
-        var addedEntityEntry = await _appDbContext.Patients
-            .AddAsync((Patient)entity, cancellationToken);
-        return addedEntityEntry?.Entity.Id;
-    }
-
-    public Task DeleteAsync(BaseEntity entity, CancellationToken cancellationToken = default)
-    {
-        return Task.Run(
-            () => _appDbContext.Patients.Remove((Patient)entity), cancellationToken);
-    }
-
-    public IQueryable<BaseEntity> Get()
-    {
-        return _appDbContext.Patients
+        return await _appDbContext.Patients
+            .Where(p => !p.IsDeleted)
             .Include(p => p.Account)
-            .Include(p => p.Appointments);
+            .Include(p => p.Appointments)
+            .ToListAsync(cancellationToken);
     }
 
-    public Task UpdateAsync(BaseEntity entity, CancellationToken cancellationToken = default)
+    public override async Task<Patient?> GetByIdAsync(
+        Guid id, CancellationToken cancellationToken = default)
     {
-        return Task.Run(
-            () => _appDbContext.Patients.Update((Patient)entity), cancellationToken);
+        return await _appDbContext.Patients
+            .Where(p => !p.IsDeleted)
+            .Where(p => p.Id == id)
+            .Include(p => p.Account)
+            .Include(p => p.Appointments)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

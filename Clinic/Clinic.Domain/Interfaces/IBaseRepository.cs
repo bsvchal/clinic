@@ -1,9 +1,10 @@
 ﻿namespace Clinic.Domain.Interfaces;
 
-public interface IBaseRepository
+public interface IBaseRepository<T> where T : BaseEntity
 {
-    Task<Guid?> CreateAsync(BaseEntity entity, CancellationToken cancellationToken = default);
-    Task DeleteAsync(BaseEntity entity, CancellationToken cancellationToken = default);
-    IQueryable<BaseEntity> Get();
-    Task UpdateAsync(BaseEntity entity, CancellationToken cancellationToken = default);
+    Task<Guid?> CreateAsync(T entity, CancellationToken cancellationToken = default);
+    Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
+    Task<List<T>> GetAsync(CancellationToken cancellationToken = default);
+    Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task UpdateAsync(T entity, CancellationToken cancellationToken = default);
 }

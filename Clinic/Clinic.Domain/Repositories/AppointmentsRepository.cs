@@ -4,38 +4,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Clinic.Domain.Repositories;
 
-public class AppointmentsRepository : IBaseRepository
+public class AppointmentsRepository : BaseRepository<Appointment>, IAppointmentsRepository
 {
     private readonly AppDbContext _appDbContext;
 
     public AppointmentsRepository(AppDbContext appDbContext)
+        : base(appDbContext)
     {
         _appDbContext = appDbContext;
     }
 
-    public async Task<Guid?> CreateAsync(BaseEntity entity, CancellationToken cancellationToken = default)
+    public override async Task<List<Appointment>> GetAsync(
+        CancellationToken cancellationToken = default)
     {
-        var addedEntityEntry = await _appDbContext.Appointments
-            .AddAsync((Appointment)entity, cancellationToken);
-        return addedEntityEntry?.Entity.Id;
-    }
-
-    public Task DeleteAsync(BaseEntity entity, CancellationToken cancellationToken = default)
-    {
-        return Task.Run(
-            () => _appDbContext.Appointments.Remove((Appointment)entity), cancellationToken);
-    }
-
-    public IQueryable<BaseEntity> Get()
-    {
-        return _appDbContext.Appointments
+        return await _appDbContext.Appointments
+            .Where(a => !a.IsDeleted)
             .Include(a => a.Doctor)
-            .Include(a => a.Patient);
+            .Include(a => a.Patient)
+            .ToListAsync(cancellationToken);
     }
 
-    public Task UpdateAsync(BaseEntity entity, CancellationToken cancellationToken = default)
+    public override async Task<Appointment?> GetByIdAsync(
+        Guid id, CancellationToken cancellationToken = default)
     {
-        return Task.Run(
-            () => _appDbContext.Appointments.Update((Appointment)entity), cancellationToken);
+        return await _appDbContext.Appointments
+            .Where(a => !a.IsDeleted)
+            .Where(a => a.Id == id)
+            .Include(a => a.Doctor)
+            .Include(a => a.Patient)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

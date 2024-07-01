@@ -1,8 +1,8 @@
 using Clinic.Domain;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Clinic.Domain.Interfaces;
 using Clinic.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace Clinic.API;
 
@@ -15,10 +15,13 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddDbContext<ClinicDbContext>(options =>
-        {
-            options.UseSqlServer(builder.Configuration.GetConnectionString("Local"));
-        });
+        builder.Services.AddDbContext<ClinicDbContext>(
+            options =>
+            {
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("Local"));
+            }
+        );
         builder.Services.AddMediatR(
             cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         builder.Services.AddScoped<IUnitOfWork, ClinicUnitOfWork>();

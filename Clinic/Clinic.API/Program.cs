@@ -2,6 +2,7 @@ using Clinic.Domain;
 using Clinic.Domain.Interfaces;
 using Clinic.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Clinic.API;
 
@@ -18,6 +19,8 @@ public class Program
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("Local"));
         });
+        builder.Services.AddMediatR(
+            cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         builder.Services.AddScoped<IUnitOfWork, ClinicUnitOfWork>();
         builder.Services
             .AddScoped<IAppointmentsRepository, AppointmentsRepository>()

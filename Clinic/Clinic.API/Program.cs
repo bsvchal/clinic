@@ -1,6 +1,8 @@
 using Clinic.Domain;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Clinic.Domain.Interfaces;
+using Clinic.Domain.Repositories;
 
 namespace Clinic.API;
 
@@ -13,14 +15,23 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
-        builder.Services.AddDbContext<AppDbContext>(
+        builder.Services.AddDbContext<ClinicDbContext>(
             options =>
             {
                 options.UseSqlServer(
                     builder.Configuration.GetConnectionString("Local"));
             }
         );
+        builder.Services.AddMediatR(
+            cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        builder.Services.AddScoped<IUnitOfWork, ClinicUnitOfWork>();
+        builder.Services
+            .AddScoped<IAppointmentsRepository, AppointmentsRepository>()
+            .AddScoped<IDoctorsRepository, DoctorsRepository>()
+            .AddScoped<IOfficesRepository, OfficesRepository>()
+            .AddScoped<IPatientsRepository, PatientsRepository>()
+            .AddScoped<IPhotosRepository, PhotosRepository>()
+            .AddScoped<IReceptionistsRepository, ReceptionistsRepository>();
 
         builder.Services.AddMediatR(
             cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
@@ -33,9 +44,7 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
         app.MapControllers();
             
         app.Run();

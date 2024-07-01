@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Clinic.Domain;
 
-public class AppUnitOfWork : IUnitOfWork
+public class ClinicUnitOfWork : IUnitOfWork
 {
-    private readonly AppDbContext _appDbContext;
+    private readonly ClinicDbContext _appDbContext;
     private readonly IServiceProvider _serviceProvider;
 
     private IAppointmentsRepository? _appointmentsRepository;
@@ -16,7 +16,7 @@ public class AppUnitOfWork : IUnitOfWork
     private IPhotosRepository? _photosRepository;
     private IReceptionistsRepository? _receptionistsRepository;
 
-    public AppUnitOfWork(AppDbContext appDbContext, IServiceProvider serviceProvider)
+    public ClinicUnitOfWork(ClinicDbContext appDbContext, IServiceProvider serviceProvider)
     {
         _appDbContext = appDbContext;
         _serviceProvider = serviceProvider;

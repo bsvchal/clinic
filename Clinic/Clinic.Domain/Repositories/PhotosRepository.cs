@@ -5,7 +5,7 @@ namespace Clinic.Domain.Repositories;
 
 public class PhotosRepository : BaseRepository<Photo>, IPhotosRepository
 {
-    public PhotosRepository(AppDbContext appDbContext)
+    public PhotosRepository(ClinicDbContext appDbContext)
         : base(appDbContext)
     {
     }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Clinic.Domain;
 
-public class AppDbContext : DbContext
+public class ClinicDbContext : DbContext
 {
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
@@ -13,7 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<Photo> Photos { get; set; }
     public DbSet<Receptionist> Receptionists { get; set; }
 
-    public AppDbContext(DbContextOptions options)
+    public ClinicDbContext(DbContextOptions options)
         : base(options)
     {
     }

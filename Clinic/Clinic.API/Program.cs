@@ -14,11 +14,11 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddDbContext<AppDbContext>(options =>
+        builder.Services.AddDbContext<ClinicDbContext>(options =>
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("Local"));
         });
-        builder.Services.AddScoped<IUnitOfWork, AppUnitOfWork>();
+        builder.Services.AddScoped<IUnitOfWork, ClinicUnitOfWork>();
         builder.Services
             .AddScoped<IAppointmentsRepository, AppointmentsRepository>()
             .AddScoped<IDoctorsRepository, DoctorsRepository>()

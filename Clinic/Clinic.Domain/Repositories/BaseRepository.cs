@@ -5,14 +5,14 @@ namespace Clinic.Domain.Repositories;
 
 public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
 {
-    private readonly AppDbContext _appDbContext;
+    private readonly ClinicDbContext _appDbContext;
 
-    public BaseRepository(AppDbContext appDbContext)
+    public BaseRepository(ClinicDbContext appDbContext)
     {
         _appDbContext = appDbContext;
     }
 
-    public async Task<Guid?> CreateAsync(
+    public virtual async Task<Guid?> CreateAsync(
         T entity, CancellationToken cancellationToken = default)
     {
         var addedEntityEntry = 
@@ -20,19 +20,20 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
         return addedEntityEntry?.Entity.Id;
     }
 
-    public Task DeleteAsync(
-        T entity, CancellationToken cancellationToken = default)
+    public virtual void Delete(T entity)
     {
-        return Task.Run(
-            () => _appDbContext.Set<T>().Remove(entity), cancellationToken);
+        _appDbContext.Set<T>().Remove(entity);
     }
 
     public virtual async Task<List<T>> GetAsync(
-        CancellationToken cancellationToken = default)
+        bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
-        return await _appDbContext.Set<T>()
-            .Where(e => !e.IsDeleted)
-            .ToListAsync(cancellationToken);
+        return includeDeleted ? 
+            await _appDbContext.Set<T>()
+                .ToListAsync(cancellationToken) : 
+            await _appDbContext.Set<T>()
+                .Where(e => !e.IsDeleted)
+                .ToListAsync(cancellationToken);
     }
 
     public virtual async Task<T?> GetByIdAsync(
@@ -44,10 +45,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task UpdateAsync(
-        T entity, CancellationToken cancellationToken = default)
+    public virtual void Update(T entity)
     {
-        return Task.Run(
-            () => _appDbContext.Set<T>().Update(entity), cancellationToken);
+        _appDbContext.Set<T>().Update(entity);
     }
 }

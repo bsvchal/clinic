@@ -9,6 +9,7 @@ public class ClinicUnitOfWork : IUnitOfWork
     private readonly ClinicDbContext _appDbContext;
     private readonly IServiceProvider _serviceProvider;
 
+    private IAccountsRepository? _accountsRepository;
     private IAppointmentsRepository? _appointmentsRepository;
     private IDoctorsRepository? _doctorsRepository;
     private IOfficesRepository? _officesRepository;
@@ -20,6 +21,16 @@ public class ClinicUnitOfWork : IUnitOfWork
     {
         _appDbContext = appDbContext;
         _serviceProvider = serviceProvider;
+    }
+
+    public IAccountsRepository AccountsRepository
+    {
+        get
+        {
+            if (_accountsRepository is null)
+                _accountsRepository = _serviceProvider.GetRequiredService<IAccountsRepository>();
+            return _accountsRepository;
+        }
     }
 
     public IAppointmentsRepository AppointmentsRepository 

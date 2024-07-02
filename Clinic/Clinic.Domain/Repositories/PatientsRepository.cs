@@ -6,23 +6,23 @@ namespace Clinic.Domain.Repositories;
 
 public class PatientsRepository : BaseRepository<Patient>, IPatientsRepository
 {
-    private readonly ClinicDbContext _appDbContext;
+    private readonly ClinicDbContext _clinicDbContext;
 
-    public PatientsRepository(ClinicDbContext appDbContext)
-        : base(appDbContext)
+    public PatientsRepository(ClinicDbContext clinicDbContext)
+        : base(clinicDbContext)
     {
-        _appDbContext = appDbContext;
+        _clinicDbContext = clinicDbContext;
     }
 
     public override async Task<List<Patient>> GetAsync(
         bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
         return includeDeleted ?
-            await _appDbContext.Patients
+            await _clinicDbContext.Patients
                 .Include(p => p.Account)
                 .Include(p => p.Appointments)
                 .ToListAsync(cancellationToken) :
-            await _appDbContext.Patients
+            await _clinicDbContext.Patients
                 .Where(p => !p.IsDeleted)
                 .Include(p => p.Account)
                 .Include(p => p.Appointments)
@@ -32,7 +32,7 @@ public class PatientsRepository : BaseRepository<Patient>, IPatientsRepository
     public override async Task<Patient?> GetByIdAsync(
         Guid id, CancellationToken cancellationToken = default)
     {
-        return await _appDbContext.Patients
+        return await _clinicDbContext.Patients
             .Where(p => !p.IsDeleted && p.Id == id)
             .Include(p => p.Account)
             .Include(p => p.Appointments)

@@ -1,7 +1,6 @@
 ﻿using MediatR;
 
-namespace Clinic.Application.Commands.Office.RemoveDoctor;
+namespace Clinic.Application.Commands.Doctor.RemoveFromOffice;
 
 public record RemoveDoctorFromOfficeInput(
-    Guid OfficeId,
     Guid DoctorId) : IRequest;

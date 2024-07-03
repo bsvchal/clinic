@@ -1,6 +1,6 @@
 ﻿namespace Clinic.API.Models.Appointment;
 
-public class AppointmentForCreation
+public class AppointmentCreationRequest
 {
     public DateTime ScheduledTime { get; set; }
     public decimal Price { get; set; }

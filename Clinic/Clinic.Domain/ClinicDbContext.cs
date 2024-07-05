@@ -33,6 +33,7 @@ public class ClinicDbContext : DbContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        var now = DateTime.UtcNow;
         var entries = ChangeTracker.Entries().ToList();
         foreach (var entry in entries)
         {
@@ -41,6 +42,7 @@ public class ClinicDbContext : DbContext
                 continue;
 
             entry.State = EntityState.Modified;
+            (entry.Entity as BaseEntity)!.DeletedTime = now;
             (entry.Entity as BaseEntity)!.IsDeleted = true;
         }
 

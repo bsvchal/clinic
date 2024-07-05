@@ -6,7 +6,7 @@ namespace Clinic.Domain;
 
 public class ClinicUnitOfWork : IUnitOfWork
 {
-    private readonly ClinicDbContext _appDbContext;
+    private readonly ClinicDbContext _clinicDbContext;
     private readonly IServiceProvider _serviceProvider;
 
     private IAppointmentsRepository? _appointmentsRepository;
@@ -16,9 +16,9 @@ public class ClinicUnitOfWork : IUnitOfWork
     private IPhotosRepository? _photosRepository;
     private IReceptionistsRepository? _receptionistsRepository;
 
-    public ClinicUnitOfWork(ClinicDbContext appDbContext, IServiceProvider serviceProvider)
+    public ClinicUnitOfWork(ClinicDbContext clinicDbContext, IServiceProvider serviceProvider)
     {
-        _appDbContext = appDbContext;
+        _clinicDbContext = clinicDbContext;
         _serviceProvider = serviceProvider;
     }
 
@@ -83,11 +83,11 @@ public class ClinicUnitOfWork : IUnitOfWork
     }
 
     public async Task<int> CommitAsync(CancellationToken cancellationToken = default) 
-        => await _appDbContext.SaveChangesAsync(cancellationToken);
+        => await _clinicDbContext.SaveChangesAsync(cancellationToken);
 
     public void Rollback()
     {
-        var entries = _appDbContext.ChangeTracker.Entries().ToList();
+        var entries = _clinicDbContext.ChangeTracker.Entries().ToList();
         foreach (var entry in entries) 
         {
             switch (entry.State) 

@@ -62,8 +62,6 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        
-        app.Map("/aboba", () => { throw new DivideByZeroException("wueibuoewfn"); });
 
         app.UseHttpsRedirection();
         app.UseAuthorization();

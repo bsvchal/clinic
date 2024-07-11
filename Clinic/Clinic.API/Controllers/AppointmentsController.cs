@@ -10,6 +10,7 @@ using Clinic.Application.Queries.Appointment.GetById;
 using Clinic.Application.Queries.Appointment.GetByPatient;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Clinic.API.Controllers;
 
@@ -28,48 +29,97 @@ public class AppointmentsController : ControllerBase
     public async Task<ActionResult> GetAppointmentByIdAsync(
         Guid id, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         var result = await _mediator.Send(new GetAppointmentByIdInput(id), cancellationToken);
 
         if (result.Appointment is null)
+        {
+            Log.Information(
+                "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+                DateTime.Now,
+                HttpContext.Request.Path,
+                HttpContext.Request.Method,
+                new { },
+                new { },
+                StatusCodes.Status404NotFound,
+                (DateTime.Now - start).TotalMilliseconds
+            );
             return NotFound();
+        }
 
-        return Ok(
+        var response = Ok(
             new AppointmentResponse(result.Appointment)
         );
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            new { },
+            response.Value,
+            response.StatusCode,
+            (DateTime.Now - start).TotalMilliseconds
+        );
+        return response;
     }
 
     [HttpGet("doctor/{doctorId}")]
     public async Task<ActionResult> GetAppointmentsByDoctorAsync(
         Guid doctorId, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         var result = await _mediator.Send(
             new GetAppointmentsByDoctorInput(doctorId),
             cancellationToken
         );
 
-        return Ok(
+        var response = Ok(
             result.Appointments.Select(a => new AppointmentResponse(a))    
         );
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            new { },
+            response.Value,
+            response.StatusCode,
+            (DateTime.Now - start).TotalMilliseconds
+        );
+        return response;
     }
 
     [HttpGet("patient/{patientId}")]
     public async Task<ActionResult> GetAppointmentsByPatientAsync(
         Guid patientId, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         var result = await _mediator.Send(
             new GetAppointmentsByPatientInput(patientId),
             cancellationToken
         );
 
-        return Ok(
+        var response = Ok(
             result.Appointments.Select(a => new AppointmentResponse(a))    
         );
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            new { },
+            response.Value,
+            response.StatusCode,
+            (DateTime.Now - start).TotalMilliseconds
+        );
+        return response;
     }
         
     [HttpPost]
     public async Task<ActionResult> CreateAppointmentAsync(
         AppointmentCreationRequest request, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         var result = await _mediator.Send(
             new CreateAppointmentInput(
                 request.PatientId,
@@ -79,20 +129,43 @@ public class AppointmentsController : ControllerBase
             ),
             cancellationToken
         );
-        return Ok(
+
+        var response = Ok(
             new CreatedEntityResponse(result.Id)
         );
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            request,
+            response.Value,
+            response.StatusCode,
+            (DateTime.Now - start).TotalMilliseconds
+        );
+        return response;
     }
 
     [HttpPut("{id}/approve")]
     public async Task<ActionResult> ApproveAppointmentAsync(
         Guid id, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         await _mediator.Send(
             new ApproveAppointmentInput(id),
             cancellationToken
         );
 
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            new { },
+            new { },
+            StatusCodes.Status204NoContent,
+            (DateTime.Now - start).TotalMilliseconds
+        );
         return NoContent();
     }
 
@@ -100,11 +173,22 @@ public class AppointmentsController : ControllerBase
     public async Task<ActionResult> UpdateAppointmentPriceAsync(
         Guid id, AppointmentUpdatePriceRequest request, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         await _mediator.Send(
             new UpdateAppointmentPriceInput(id, request.Price),
             cancellationToken
         );
 
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            request,
+            new { },
+            StatusCodes.Status204NoContent,
+            (DateTime.Now - start).TotalMilliseconds
+        );
         return NoContent();
     }
 
@@ -112,11 +196,22 @@ public class AppointmentsController : ControllerBase
     public async Task<ActionResult> UpdateAppointmentScheduledTimeAsync(
         Guid id, AppointmentUpdateScheduledTimeRequest request, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         await _mediator.Send(
             new UpdateAppointmentScheduledTimeInput(id, request.ScheduledTime),
             cancellationToken
         );
 
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            request,
+            new { },
+            StatusCodes.Status204NoContent,
+            (DateTime.Now - start).TotalMilliseconds
+        );
         return NoContent();
     }
 
@@ -124,11 +219,22 @@ public class AppointmentsController : ControllerBase
     public async Task<ActionResult> DeleteAppointmentAsync(
         Guid id, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         await _mediator.Send(
             new DeleteAppointmentInput(id),
             cancellationToken
         );
 
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            new { },
+            new { },
+            StatusCodes.Status204NoContent,
+            (DateTime.Now - start).TotalMilliseconds
+        );
         return NoContent();
     }
 }

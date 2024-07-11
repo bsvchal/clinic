@@ -5,6 +5,7 @@ using Clinic.Application.Commands.Receptionist.Delete;
 using Clinic.Application.Queries.Receptionist.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Clinic.API.Controllers;
 
@@ -23,23 +24,48 @@ public class ReceptionistsController : ControllerBase
     public async Task<ActionResult> GetReceptionistByIdAsync(
         Guid id, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         var result = await _mediator.Send(
             new GetReceptionistByIdInput(id),
             cancellationToken
         );
 
         if (result.Receptionist is null)
+        {
+            Log.Information(
+                "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+                DateTime.Now,
+                HttpContext.Request.Path,
+                HttpContext.Request.Method,
+                new { },
+                new { },
+                StatusCodes.Status404NotFound,
+                (DateTime.Now - start).TotalMilliseconds
+            );
             return NotFound();
+        }
 
-        return Ok(
+        var response = Ok(
             result.Receptionist    
         );
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            new { },
+            response.Value,
+            response.StatusCode,
+            (DateTime.Now - start).TotalMilliseconds
+        );
+        return response;
     }
 
     [HttpPost]
     public async Task<ActionResult> CreateReceptionistAsync(
         ReceptionistCreationRequest request, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         var result = await _mediator.Send(
             new CreateReceptionistInput(
                 request.Email,
@@ -53,20 +79,42 @@ public class ReceptionistsController : ControllerBase
             cancellationToken
         );
 
-        return Ok(
+        var response = Ok(
             new CreatedEntityResponse(result.Id)    
         );
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            request,
+            response.Value,
+            response.StatusCode,
+            (DateTime.Now - start).TotalMilliseconds
+        );
+        return response;
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteReceptionistAsync(
         Guid id, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         await _mediator.Send(
             new DeleteReceptionistInput(id),
             cancellationToken
         );
 
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            new { },
+            new { },
+            StatusCodes.Status204NoContent,
+            (DateTime.Now - start).TotalMilliseconds
+        );
         return NoContent();
     }
 }

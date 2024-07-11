@@ -7,6 +7,7 @@ using Clinic.Application.Queries.Office.GetByCity;
 using Clinic.Application.Queries.Office.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Clinic.API.Controllers;
 
@@ -25,37 +26,74 @@ public class OfficesController : ControllerBase
     public async Task<ActionResult> GetOfficeByIdAsync(
         Guid id, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         var result = await _mediator.Send(
             new GetOfficeByIdInput(id),
             cancellationToken
         );
 
         if (result.Office is null)
+        {
+            Log.Information(
+                "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+                DateTime.Now,
+                HttpContext.Request.Path,
+                HttpContext.Request.Method,
+                new { },
+                new { },
+                StatusCodes.Status404NotFound,
+                (DateTime.Now - start).TotalMilliseconds
+            );
             return NotFound();
+        }
 
-        return Ok(
+        var response = Ok(
             new OfficeResponse(result.Office)
         );
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            new { },
+            response.Value,
+            response.StatusCode,
+            (DateTime.Now - start).TotalMilliseconds
+        );
+        return response;
     }
 
     [HttpGet("city/{cityName}")]
     public async Task<ActionResult> GetOfficesByCityAsync(
         string cityName, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         var result = await _mediator.Send(
             new GetOfficesByCityInput(cityName),
             cancellationToken
         );
 
-        return Ok(
+        var response = Ok(
             result.Offices.Select(o => new OfficeResponse(o))    
         );
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            new { },
+            response.Value,
+            response.StatusCode,
+            (DateTime.Now - start).TotalMilliseconds
+        );
+        return response;
     }
 
     [HttpPost]
     public async Task<ActionResult> CreateOfficeAsync(
         OfficeCreationRequest request, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         var result = await _mediator.Send(
             new CreateOfficeInput(
                 request.CityName,
@@ -63,21 +101,43 @@ public class OfficesController : ControllerBase
             ),
             cancellationToken
         );
-        return Ok(
+
+        var response = Ok(
             new CreatedEntityResponse(result.Id)    
         );
-
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            request,
+            response.Value,
+            response.StatusCode,
+            (DateTime.Now - start).TotalMilliseconds
+        );
+        return response;
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateOfficeRegistryPhoneNumberAsync(
         Guid id, OfficeUpdateRegistryPhoneNumberRequest request, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         await _mediator.Send(
             new UpdateOfficeInput(id, request.RegistryPhoneNumber),
             cancellationToken
         );
 
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            request,
+            new { },
+            StatusCodes.Status204NoContent,
+            (DateTime.Now - start).TotalMilliseconds
+        );
         return NoContent();
     }
 
@@ -85,11 +145,22 @@ public class OfficesController : ControllerBase
     public async Task<ActionResult> DeleteOfficeAsync(
         Guid id, CancellationToken cancellationToken = default)
     {
+        var start = DateTime.Now;
         await _mediator.Send(
             new DeleteOfficeInput(id),
             cancellationToken
         );
 
+        Log.Information(
+            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
+            DateTime.Now,
+            HttpContext.Request.Path,
+            HttpContext.Request.Method,
+            new { },
+            new { },
+            StatusCodes.Status204NoContent,
+            (DateTime.Now - start).TotalMilliseconds
+        );
         return NoContent();
     }
 }

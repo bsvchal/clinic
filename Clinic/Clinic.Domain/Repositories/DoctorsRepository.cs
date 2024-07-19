@@ -6,24 +6,24 @@ namespace Clinic.Domain.Repositories;
 
 public class DoctorsRepository : BaseRepository<Doctor>, IDoctorsRepository
 {
-    private readonly ClinicDbContext _appDbContext;
+    private readonly ClinicDbContext _clinicDbContext;
 
-    public DoctorsRepository(ClinicDbContext appDbContext)
-        : base(appDbContext)
+    public DoctorsRepository(ClinicDbContext clinicDbContext)
+        : base(clinicDbContext)
     {
-        _appDbContext = appDbContext;
+        _clinicDbContext = clinicDbContext;
     }
 
     public override async Task<List<Doctor>> GetAsync(
         bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
         return includeDeleted ?
-            await _appDbContext.Doctors
+            await _clinicDbContext.Doctors
                 .Include(d => d.Account)
                 .Include(d => d.Office)
                 .Include(d => d.Appointments)
                 .ToListAsync(cancellationToken) :
-            await _appDbContext.Doctors
+            await _clinicDbContext.Doctors
                 .Where(d => !d.IsDeleted)
                 .Include(d => d.Account)
                 .Include(d => d.Office)
@@ -34,7 +34,7 @@ public class DoctorsRepository : BaseRepository<Doctor>, IDoctorsRepository
     public override async Task<Doctor?> GetByIdAsync(
         Guid id, CancellationToken cancellationToken = default)
     {
-        return await _appDbContext.Doctors
+        return await _clinicDbContext.Doctors
             .Where(d => !d.IsDeleted && d.Id == id)
             .Include(d => d.Account)
             .Include(d => d.Office)

@@ -2,4 +2,4 @@
 
 namespace Clinic.Application.Commands.Appointment.Approve;
 
-public record ApproveAppointmentInput() : IRequest;
+public record ApproveAppointmentInput(Guid Id) : IRequest;

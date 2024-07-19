@@ -6,23 +6,23 @@ namespace Clinic.Domain.Repositories;
 
 public class OfficesRepository : BaseRepository<Office>, IOfficesRepository
 {
-    private readonly ClinicDbContext _appDbContext;
+    private readonly ClinicDbContext _clinicDbContext;
 
-    public OfficesRepository(ClinicDbContext appDbContext)
-        : base(appDbContext)
+    public OfficesRepository(ClinicDbContext clinicDbContext)
+        : base(clinicDbContext)
     {
-        _appDbContext = appDbContext;
+        _clinicDbContext = clinicDbContext;
     }
 
     public override async Task<List<Office>> GetAsync(
         bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
         return includeDeleted ?
-            await _appDbContext.Offices
+            await _clinicDbContext.Offices
                 .Include(o => o.Doctors)
                 .Include(o => o.Receptionists)
                 .ToListAsync(cancellationToken) :
-            await _appDbContext.Offices
+            await _clinicDbContext.Offices
                 .Where(o => !o.IsDeleted)
                 .Include(o => o.Doctors)
                 .Include(o => o.Receptionists)
@@ -32,7 +32,7 @@ public class OfficesRepository : BaseRepository<Office>, IOfficesRepository
     public override async Task<Office?> GetByIdAsync(
         Guid id, CancellationToken cancellationToken = default)
     {
-        return await _appDbContext.Offices
+        return await _clinicDbContext.Offices
             .Where(o => !o.IsDeleted && o.Id == id)
             .Include(o => o.Doctors)
             .Include(o => o.Receptionists)

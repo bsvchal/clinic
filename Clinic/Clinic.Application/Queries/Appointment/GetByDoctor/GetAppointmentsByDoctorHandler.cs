@@ -1,12 +1,23 @@
-﻿using MediatR;
+﻿using Clinic.Domain.Interfaces;
+using MediatR;
 
 namespace Clinic.Application.Queries.Appointment.GetByDoctor;
 
-public class GetAppointmentsByDoctorHandler : IRequestHandler<GetAppointmentsByDoctorInput, GetAppointmentsByDoctorOutput>
+public class GetAppointmentsByDoctorHandler 
+    : IRequestHandler<GetAppointmentsByDoctorInput, GetAppointmentsByDoctorOutput>
 {
-    public Task<GetAppointmentsByDoctorOutput> Handle(
+    private readonly IUnitOfWork _unitOfWork;
+
+    public GetAppointmentsByDoctorHandler(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
+    public async Task<GetAppointmentsByDoctorOutput> Handle(
         GetAppointmentsByDoctorInput request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var appointments = 
+            await _unitOfWork.AppointmentsRepository.GetAsync(cancellationToken: cancellationToken);
+        return new(appointments.Where(a => a.DoctorId == request.DoctorId));
     }
 }

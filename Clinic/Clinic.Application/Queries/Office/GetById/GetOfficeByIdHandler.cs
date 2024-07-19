@@ -1,12 +1,22 @@
-﻿using MediatR;
+﻿using Clinic.Domain.Interfaces;
+using MediatR;
 
 namespace Clinic.Application.Queries.Office.GetById;
 
 public class GetOfficeByIdHandler : IRequestHandler<GetOfficeByIdInput, GetOfficeByIdOutput>
 {
-    public Task<GetOfficeByIdOutput> Handle(
+    private readonly IUnitOfWork _unitOfWork;
+
+    public GetOfficeByIdHandler(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
+    public async Task<GetOfficeByIdOutput> Handle(
         GetOfficeByIdInput request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var office = 
+            await _unitOfWork.OfficesRepository.GetByIdAsync(request.Id, cancellationToken);
+        return new(office);
     }
 }

@@ -2,4 +2,4 @@
 
 namespace Clinic.Application.Commands.Photo.Update;
 
-public record UpdatePhotoInput(string Path) : IRequest;
+public record UpdatePhotoInput(Guid Id, string Path) : IRequest;

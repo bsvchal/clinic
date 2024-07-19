@@ -1,7 +1,7 @@
 ﻿namespace Clinic.API.Models.Office;
 
-public class OfficeForCreation
+public class OfficeCreationRequest
 {
-    public string City { get; set; }
+    public string CityName { get; set; }
     public string RegistryPhoneNumber { get; set; }
 }

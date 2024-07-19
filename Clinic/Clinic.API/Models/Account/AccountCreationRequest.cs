@@ -1,6 +1,6 @@
 ﻿namespace Clinic.API.Models.Account;
 
-public class AccountForCreation
+public class AccountCreationRequest
 {
     public string Email { get; set; }
     public string Password { get; set; }

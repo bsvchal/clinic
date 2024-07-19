@@ -3,9 +3,11 @@
 namespace Clinic.Application.Commands.Patient.Create;
 
 public record CreatePatientInput(
+    string Email,
+    string Password,
+    string PhoneNumber,
     string FirstName,
     string LastName,
     string MiddleName,
-    DateOnly DateOfBirth,
-    Guid AccountId
+    DateOnly DateOfBirth
 ) : IRequest<CreatePatientOutput>;

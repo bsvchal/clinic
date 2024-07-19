@@ -1,8 +1,8 @@
 using Clinic.Domain;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Clinic.Domain.Interfaces;
 using Clinic.Domain.Repositories;
+using Clinic.Application;
 
 namespace Clinic.API;
 
@@ -22,10 +22,9 @@ public class Program
                     builder.Configuration.GetConnectionString("Local"));
             }
         );
-        builder.Services.AddMediatR(
-            cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         builder.Services.AddScoped<IUnitOfWork, ClinicUnitOfWork>();
         builder.Services
+            .AddScoped<IAccountsRepository, AccountsRepository>()
             .AddScoped<IAppointmentsRepository, AppointmentsRepository>()
             .AddScoped<IDoctorsRepository, DoctorsRepository>()
             .AddScoped<IOfficesRepository, OfficesRepository>()
@@ -33,8 +32,7 @@ public class Program
             .AddScoped<IPhotosRepository, PhotosRepository>()
             .AddScoped<IReceptionistsRepository, ReceptionistsRepository>();
 
-        builder.Services.AddMediatR(
-            cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        builder.Services.AddApplication();
 
         var app = builder.Build();
         if (app.Environment.IsDevelopment())

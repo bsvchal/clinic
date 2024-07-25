@@ -1,16 +1,15 @@
+using Clinic.API.Settings;
+using Clinic.Application;
+using Clinic.Application.BackgroundServices;
 using Clinic.Domain;
 using Clinic.Domain.Interfaces;
 using Clinic.Domain.Repositories;
-using Clinic.Application.BackgroundServices;
-using Clinic.API.Settings;
-using System.Net.Mail;
-using System.Net;
 using Elastic.Serilog.Sinks;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Exceptions;
-using System.Reflection;
-using Clinic.Application;
+using System.Net;
+using System.Net.Mail;
 
 namespace Clinic.API;
 
@@ -66,8 +65,6 @@ public class Program
                 Credentials = new NetworkCredential(smtp.Username, smtp.Password),
             });
 
-        builder.Services.AddMediatR(
-            cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddProblemDetails();
         builder.Services.AddApplication();

@@ -12,6 +12,5 @@ public class Patient : BaseEntity
     public string MiddleName { get; set; } 
     public DateOnly DateOfBirth { get; set; }
     public Guid AccountId { get; set; }
-    public Account Account { get; set; }
     public ICollection<Appointment> Appointments { get; set; }
 }

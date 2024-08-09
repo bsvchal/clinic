@@ -19,13 +19,11 @@ public class DoctorsRepository : BaseRepository<Doctor>, IDoctorsRepository
     {
         return includeDeleted ?
             await _clinicDbContext.Doctors
-                .Include(d => d.Account)
                 .Include(d => d.Office)
                 .Include(d => d.Appointments)
                 .ToListAsync(cancellationToken) :
             await _clinicDbContext.Doctors
                 .Where(d => !d.IsDeleted)
-                .Include(d => d.Account)
                 .Include(d => d.Office)
                 .Include(d => d.Appointments)
                 .ToListAsync(cancellationToken);
@@ -36,7 +34,6 @@ public class DoctorsRepository : BaseRepository<Doctor>, IDoctorsRepository
     {
         return await _clinicDbContext.Doctors
             .Where(d => !d.IsDeleted && d.Id == id)
-            .Include(d => d.Account)
             .Include(d => d.Office)
             .Include(d => d.Appointments)
             .FirstOrDefaultAsync(cancellationToken);

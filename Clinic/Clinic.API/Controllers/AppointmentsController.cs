@@ -9,6 +9,7 @@ using Clinic.Application.Queries.Appointment.GetByDoctor;
 using Clinic.Application.Queries.Appointment.GetById;
 using Clinic.Application.Queries.Appointment.GetByPatient;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -16,6 +17,7 @@ namespace Clinic.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class AppointmentsController : ControllerBase
 {
     private readonly IMediator _mediator;

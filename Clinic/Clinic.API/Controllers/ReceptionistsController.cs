@@ -1,9 +1,9 @@
 ﻿using Clinic.API.Models;
 using Clinic.API.Models.Receptionist;
-using Clinic.Application.Commands.Receptionist.Create;
 using Clinic.Application.Commands.Receptionist.Delete;
 using Clinic.Application.Queries.Receptionist.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -11,6 +11,7 @@ namespace Clinic.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class ReceptionistsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -54,40 +55,6 @@ public class ReceptionistsController : ControllerBase
             HttpContext.Request.Path,
             HttpContext.Request.Method,
             new { },
-            response.Value,
-            response.StatusCode,
-            (DateTime.Now - start).TotalMilliseconds
-        );
-        return response;
-    }
-
-    [HttpPost]
-    public async Task<ActionResult> CreateReceptionistAsync(
-        ReceptionistCreationRequest request, CancellationToken cancellationToken = default)
-    {
-        var start = DateTime.Now;
-        var result = await _mediator.Send(
-            new CreateReceptionistInput(
-                request.Email,
-                request.Password,
-                request.PhoneNumber,
-                request.FirstName,
-                request.LastName,
-                request.MiddleName,
-                request.OfficeId
-            ),
-            cancellationToken
-        );
-
-        var response = Ok(
-            new CreatedEntityResponse(result.Id)    
-        );
-        Log.Information(
-            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
-            DateTime.Now,
-            HttpContext.Request.Path,
-            HttpContext.Request.Method,
-            request,
             response.Value,
             response.StatusCode,
             (DateTime.Now - start).TotalMilliseconds

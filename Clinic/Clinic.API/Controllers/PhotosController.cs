@@ -4,6 +4,7 @@ using Clinic.Application.Commands.Photo.Create;
 using Clinic.Application.Commands.Photo.Delete;
 using Clinic.Application.Commands.Photo.Update;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -11,6 +12,7 @@ namespace Clinic.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class PhotosController : ControllerBase
 {
     private readonly IMediator _mediator;

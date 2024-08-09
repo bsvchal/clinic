@@ -1,0 +1,45 @@
+﻿@page
+@model IdentityServer.Pages.Account.Registration.IndexModel
+@{
+}
+
+<div class="col-sm-6">
+    <div class="card">
+        <div class="card-header">
+            <h2>Local Account</h2>
+        </div>
+
+        <div class="card-body">
+            <form asp-page="/Account/Registration/Index" method="post">
+                <input type="hidden" asp-for="Input.ReturnUrl" />
+
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input class="form-control" placeholder="Email" asp-for="Email" name="Email" autofocus>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input type="password" class="form-control" placeholder="Password" name="Password" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstName"></label>
+                    <input class="form-control" placeholder="First Name" name="FirstName" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label asp-for="MiddleName"></label>
+                    <input class="form-control" placeholder="Middle Name" name="MiddleName" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName"></label>
+                    <input class="form-control" placeholder="Last Name" name="LastName" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label asp-for="DateOfBirth"></label>
+                    <input type="date" class="form-control" placeholder="Date Of Birth" name="DateOfBirth" autocomplete="off">
+                </div>
+
+                <button class="btn btn-primary" name="Button" value="login">Create</button>
+            </form>
+        </div>
+    </div>
+</div>  

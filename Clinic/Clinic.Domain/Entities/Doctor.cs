@@ -18,6 +18,5 @@ public class Doctor : BaseEntity
     public Guid? OfficeId { get; set; }
     public Office? Office { get; set; } 
     public Guid AccountId { get; set; }
-    public Account Account { get; set; } 
     public ICollection<Appointment> Appointments { get; set; }
 }

@@ -5,7 +5,6 @@ namespace Clinic.Domain;
 
 public class ClinicDbContext : DbContext
 {
-    public DbSet<Account> Accounts { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<Doctor> Doctors { get; set; }
     public DbSet<Office> Offices { get; set; }

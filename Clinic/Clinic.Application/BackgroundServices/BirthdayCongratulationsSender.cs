@@ -2,7 +2,6 @@
 using FluentEmail.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Clinic.Application.BackgroundServices;
@@ -22,7 +21,7 @@ public class BirthdayCongratulationsSender : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        /*while (!stoppingToken.IsCancellationRequested)
         {
             using var scope = _serviceScopeFactory.CreateScope();
             var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
@@ -56,6 +55,6 @@ public class BirthdayCongratulationsSender : BackgroundService
             }
             
             await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
-        }
+        }*/
     }
 }

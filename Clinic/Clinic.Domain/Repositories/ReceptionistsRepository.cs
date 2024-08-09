@@ -19,12 +19,10 @@ public class ReceptionistsRepository : BaseRepository<Receptionist>, IReceptioni
     {
         return includeDeleted ?
             await _clinicDbContext.Receptionists
-                .Include(r => r.Account)
                 .Include(r => r.Office)
                 .ToListAsync(cancellationToken) :
             await _clinicDbContext.Receptionists
                 .Where(r => !r.IsDeleted)
-                .Include(r => r.Account)
                 .Include(r => r.Office)
                 .ToListAsync(cancellationToken);
     }
@@ -34,7 +32,6 @@ public class ReceptionistsRepository : BaseRepository<Receptionist>, IReceptioni
     {
         return await _clinicDbContext.Receptionists
             .Where(r => !r.IsDeleted && r.Id == id)
-            .Include(r => r.Account)
             .Include(r => r.Office)
             .FirstOrDefaultAsync(cancellationToken);
     }

@@ -1,7 +1,6 @@
 ﻿using Clinic.API.Models;
 using Clinic.API.Models.Doctor;
 using Clinic.Application.Commands.Doctor.AddToOffice;
-using Clinic.Application.Commands.Doctor.Create;
 using Clinic.Application.Commands.Doctor.Delete;
 using Clinic.Application.Commands.Doctor.RemoveFromOffice;
 using Clinic.Application.Commands.Doctor.UpdateSpecialization;
@@ -10,6 +9,7 @@ using Clinic.Application.Queries.Doctor.GetById;
 using Clinic.Application.Queries.Doctor.GetByOffice;
 using Clinic.Application.Queries.Doctor.GetBySpecialization;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -17,6 +17,7 @@ namespace Clinic.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class DoctorsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -27,6 +28,7 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetDoctorByIdAsync(
         Guid id, CancellationToken cancellationToken = default)
     {
@@ -68,6 +70,7 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpGet("office/{officeId}")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetDoctorsByOfficeAsync(
         Guid officeId, CancellationToken cancellationToken = default)
     {
@@ -94,6 +97,7 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpGet("specialization/{specialization}")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetDoctorsBySpecializationAsync(
         string specialization, CancellationToken cancellationToken = default)
     {
@@ -112,43 +116,6 @@ public class DoctorsController : ControllerBase
             HttpContext.Request.Path,
             HttpContext.Request.Method,
             new { },
-            response.Value,
-            response.StatusCode,
-            (DateTime.Now - start).TotalMilliseconds
-        );
-        return response;
-    }
-
-    [HttpPost]
-    public async Task<ActionResult> CreateDoctorAsync(
-        DoctorCreationRequest request, CancellationToken cancellationToken = default)
-    {
-        var start = DateTime.Now;
-        var result = await _mediator.Send(
-            new CreateDoctorInput(
-                request.Email,
-                request.Password,
-                request.PhoneNumber,
-                request.FirstName,
-                request.LastName,
-                request.MiddleName,
-                request.DateOfBirth,
-                request.CareerStartYear,
-                request.Specialization,
-                request.OfficeId
-            ),
-            cancellationToken
-        );
-
-        var response = Ok(
-            new CreatedEntityResponse(result.Id)
-        );
-        Log.Information(
-            "{Now} - Request On: {Path}; Method: {Method}; Body: {@Body}; Response: {@Response}; Status: {StatusCode}; Completed In: {CompletedIn} ms",
-            DateTime.Now,
-            HttpContext.Request.Path,
-            HttpContext.Request.Method,
-            request,
             response.Value,
             response.StatusCode,
             (DateTime.Now - start).TotalMilliseconds

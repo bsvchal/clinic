@@ -11,7 +11,6 @@ public class Receptionist : BaseEntity
     [MaxLength(30)]
     public string MiddleName { get; set; }
     public Guid AccountId { get; set; }
-    public Account Account { get; set; } 
     public Guid OfficeId { get; set; }
     public Office Office { get; set; } 
 }

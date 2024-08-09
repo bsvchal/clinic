@@ -2,7 +2,6 @@
 
 public interface IUnitOfWork
 {
-    IAccountsRepository AccountsRepository { get; }
     IAppointmentsRepository AppointmentsRepository { get; }
     IDoctorsRepository DoctorsRepository { get; }
     IOfficesRepository OfficesRepository { get; }

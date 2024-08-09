@@ -6,6 +6,7 @@ using Clinic.Application.Commands.Office.Update;
 using Clinic.Application.Queries.Office.GetByCity;
 using Clinic.Application.Queries.Office.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -13,6 +14,7 @@ namespace Clinic.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class OfficesController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -23,6 +25,7 @@ public class OfficesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetOfficeByIdAsync(
         Guid id, CancellationToken cancellationToken = default)
     {
@@ -64,6 +67,7 @@ public class OfficesController : ControllerBase
     }
 
     [HttpGet("city/{cityName}")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetOfficesByCityAsync(
         string cityName, CancellationToken cancellationToken = default)
     {
